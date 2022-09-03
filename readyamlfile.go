@@ -39,13 +39,13 @@ func readYamlFile(filename string) ServiceCatalog {
 		if s.Url == "" {
 			exitWithError(fmt.Errorf("URL of Service %s may not be empty", s.Name))
 		}
-		if s.Method == "" {
-			sc.Service[i].Method = serviceDefaults.Method
+		if s.Test == "" {
+			sc.Service[i].Test = serviceDefaults.Test
 		}
-		sc.Service[i].Method = strings.ToUpper(sc.Service[i].Method)
+		sc.Service[i].Test = strings.ToUpper(sc.Service[i].Test)
 		// check if String is in allowedMethods
-		if !strings.Contains(allowedMethods, s.Method) {
-			exitWithError(fmt.Errorf("method \"%s\" of Service %s is not allowed. Allowed methods are: %v", s.Method, s.Name, allowedMethods))
+		if !strings.Contains(allowedTests, s.Test) {
+			exitWithError(fmt.Errorf("method \"%s\" of Service %s is not allowed. Allowed methods are: %v", s.Test, s.Name, allowedTests))
 		}
 		if s.Status == 0 {
 			sc.Service[i].Status = serviceDefaults.Status
