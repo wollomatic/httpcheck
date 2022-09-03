@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -39,14 +38,14 @@ func readYamlFile(filename string) ServiceCatalog {
 		if s.Url == "" {
 			exitWithError(fmt.Errorf("URL of Service %s may not be empty", s.Name))
 		}
-		if s.Test == "" {
-			sc.Service[i].Test = serviceDefaults.Test
-		}
-		sc.Service[i].Test = strings.ToUpper(sc.Service[i].Test)
-		// check if String is in allowedMethods
-		if !strings.Contains(allowedTests, s.Test) {
-			exitWithError(fmt.Errorf("method \"%s\" of Service %s is not allowed. Allowed methods are: %v", s.Test, s.Name, allowedTests))
-		}
+		// if s.Test == "" {
+		// 	sc.Service[i].Test = serviceDefaults.Test
+		// }
+		// sc.Service[i].Test = strings.ToUpper(sc.Service[i].Test)
+		// // check if String is in allowedMethods
+		// if !strings.Contains(allowedTests, s.Test) {
+		// 	exitWithError(fmt.Errorf("test \"%s\" of Service %s is not allowed. Allowed tests are: %v", s.Test, s.Name, allowedTests))
+		// }
 		if s.Status == 0 {
 			sc.Service[i].Status = serviceDefaults.Status
 		}
