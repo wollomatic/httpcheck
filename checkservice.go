@@ -24,8 +24,10 @@ func checkService(ch chan serviceResponse, s Service, delay time.Duration) {
 			time.Sleep(time.Duration(s.ErrDelay) * time.Millisecond)
 		}
 		start := time.Now()
-		o.gottenStatus, o.err = httpcheck(s.Url, s.Status, s.Text, time.Duration(s.Timeout)*time.Millisecond)
+		response, err := httpcheck(s.Url, s.Status, s.Text, time.Duration(s.Timeout)*time.Millisecond)
 		o.requestDuration = time.Since(start)
+		o.response = *response
+		o.err = err
 		if o.err == nil {
 			ch <- o
 			return
@@ -34,7 +36,7 @@ func checkService(ch chan serviceResponse, s Service, delay time.Duration) {
 	ch <- o
 }
 
-func httpcheck(url string, stat int, str string, timeout time.Duration) (int, error) {
+func httpcheck(url string, stat int, str string, timeout time.Duration) (*http.Response, error) {
 	client := &http.Client{
 		Timeout: timeout,
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
@@ -44,23 +46,23 @@ func httpcheck(url string, stat int, str string, timeout time.Duration) (int, er
 
 	resp, err := client.Get(url)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 
 	if resp.StatusCode != stat {
-		return resp.StatusCode, fmt.Errorf("status code does not match: got %d, want %d", resp.StatusCode, stat)
+		return resp, fmt.Errorf("status code does not match: got %d, want %d", resp.StatusCode, stat)
 	}
 
 	if str != "" {
 		body, err := io.ReadAll(resp.Body)
 		if err != nil {
-			return resp.StatusCode, err
+			return resp, err
 		}
 
 		if !strings.Contains(string(body), str) {
-			return resp.StatusCode, fmt.Errorf("search string \"%s\" not found", str)
+			return resp, fmt.Errorf("search string \"%s\" not found", str)
 		}
 	}
 
-	return resp.StatusCode, nil
+	return resp, nil
 }

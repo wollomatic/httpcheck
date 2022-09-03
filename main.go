@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"net/http"
 	"os"
 	"time"
 
@@ -28,7 +29,7 @@ type ServiceCatalog struct {
 type serviceResponse struct {
 	service         Service
 	requestDuration time.Duration
-	gottenStatus    int
+	response        http.Response
 	retries         int
 	err             error
 }
@@ -61,9 +62,14 @@ func main() {
 	// create channel for service responses
 	ch := make(chan serviceResponse)
 
+	var maxServiceNameLen int
+
 	// start concurrent service checks
 	delay := 0
 	for _, s := range sc.ServiceCatalog {
+		if len(s.Name) > maxServiceNameLen {
+			maxServiceNameLen = len(s.Name)
+		}
 		go checkService(ch, s, time.Duration(delay*int(time.Millisecond)))
 		delay += sc.Delay
 	}
@@ -78,7 +84,7 @@ func main() {
 			unhealthyServiceCount++
 			fmt.Fprintf(os.Stderr, "- %s\t%v\n", o.service.Name, o.err)
 		} else {
-			fmt.Fprintf(os.Stdout, "+ %s\tOK: http %v, %v,\tretries: %v,\t%s\n", o.service.Name, o.gottenStatus, o.requestDuration.Round(time.Millisecond), o.retries, o.service.Url)
+			fmt.Fprintf(os.Stdout, "+ %s\tOK\t%s %v, %v,\tretries: %v\t%s\n", o.service.Name, o.response.Proto, o.response.Status, o.requestDuration.Round(time.Millisecond), o.retries, o.service.Url)
 		}
 	}
 	fmt.Println("---")
