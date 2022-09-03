@@ -46,7 +46,7 @@ func httpcheck(url string, stat int, str string, timeout time.Duration) (*http.R
 
 	resp, err := client.Get(url)
 	if err != nil {
-		return nil, err
+		return &http.Response{}, err
 	}
 
 	if resp.StatusCode != stat {
