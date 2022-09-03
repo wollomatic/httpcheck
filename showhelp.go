@@ -6,10 +6,11 @@ import (
 )
 
 func showHelp() {
-	fmt.Println(`Usage: httpcheck file.yaml
-Commands:
-check filename.yaml   check services
-sample                show sample yaml file
+	fmt.Printf("httpcheck version %s (github.com/wollomatic/httpcheck)\n", VERSION)
+	fmt.Println(`
+Tests web service availability as specified in given yaml file.
+
+Usage: httpcheck file.yaml
 
 Return codes:
 0 - all services are ok
@@ -17,4 +18,3 @@ Return codes:
 n - n services are not ok`)
 	os.Exit(0)
 }
-

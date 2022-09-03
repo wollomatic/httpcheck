@@ -6,6 +6,8 @@ import (
 	"time"
 )
 
+const VERSION = "0.1.0"
+
 func main() {
 
 	// if no filename argument is given show help and exit
