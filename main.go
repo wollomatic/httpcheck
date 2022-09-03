@@ -82,9 +82,9 @@ func main() {
 		o := <-ch
 		if o.err != nil {
 			unhealthyServiceCount++
-			fmt.Fprintf(os.Stderr, "- %s\t%v\n", o.service.Name, o.err)
+			fmt.Printf("- %-30s   %v\n", o.service.Name, o.err)
 		} else {
-			fmt.Fprintf(os.Stdout, "+ %s\tOK\t%s %v, %v,\tretries: %v\t%s\n", o.service.Name, o.response.Proto, o.response.Status, o.requestDuration.Round(time.Millisecond), o.retries, o.service.Url)
+			fmt.Printf("+ %-30s   %-10s %-30v %10v   %3v retries\n", o.service.Name, o.response.Proto, o.response.Status, o.requestDuration.Round(time.Millisecond), o.retries)
 		}
 	}
 	fmt.Println("---")
