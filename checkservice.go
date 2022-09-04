@@ -23,8 +23,19 @@ func checkService(ch chan serviceResponse, s Service, delay time.Duration) {
 		if o.retries != 0 {
 			time.Sleep(time.Duration(s.ErrDelay) * time.Millisecond)
 		}
+		var response *http.Response
+		var err error
 		start := time.Now()
-		response, err := httpcheck(s.Url, s.Status, s.Text, time.Duration(s.Timeout)*time.Millisecond)
+		
+		switch s.Test {
+		case "GET":
+			response, err = httpGETcheck(s.Url, s.Status, s.Text, time.Duration(s.Timeout)*time.Millisecond)
+		case "HEAD":
+			response, err = httpHEADcheck(s.Url, s.Status, time.Duration(s.Timeout)*time.Millisecond)
+		default:
+			response=&http.Response{}
+			err = fmt.Errorf("unknown test type: %s", s.Test)
+		}
 		o.requestDuration = time.Since(start)
 		o.response = *response
 		o.err = err
@@ -36,7 +47,7 @@ func checkService(ch chan serviceResponse, s Service, delay time.Duration) {
 	ch <- o
 }
 
-func httpcheck(url string, stat int, str string, timeout time.Duration) (*http.Response, error) {
+func httpGETcheck(url string, stat int, str string, timeout time.Duration) (*http.Response, error) {
 	client := &http.Client{
 		Timeout: timeout,
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
@@ -63,6 +74,26 @@ func httpcheck(url string, stat int, str string, timeout time.Duration) (*http.R
 		if !strings.Contains(string(body), str) {
 			return resp, fmt.Errorf("search string \"%s\" not found", str)
 		}
+	}
+
+	return resp, nil
+}
+
+func httpHEADcheck(url string, stat int, timeout time.Duration) (*http.Response, error) {
+	client := &http.Client{
+		Timeout: timeout,
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			return http.ErrUseLastResponse
+		},
+	}
+
+	resp, err := client.Head(url)
+	if err != nil {
+		return &http.Response{}, err
+	}
+
+	if resp.StatusCode != stat {
+		return resp, fmt.Errorf("status code does not match: got %d, want %d", resp.StatusCode, stat)
 	}
 
 	return resp, nil

@@ -7,7 +7,7 @@ import (
 
 type Service struct {
 	Name     string `yaml:"name"`
-	// Test     string `yaml:"test"`
+	Test     string `yaml:"test"`
 	Url      string `yaml:"url"`
 	Status   int    `yaml:"status"`
 	Text     string `yaml:"text"`
@@ -30,11 +30,11 @@ type serviceResponse struct {
 }
 
 var serviceDefaults = Service{
-	// Test:     "GET",
+	Test:     "GET",
 	Status:   200,
 	Timeout:  1000,
 	Retries:  0,
 	ErrDelay: 100,
 }
 
-// const allowedTests = "GET"
+const allowedTests = "GET, HEAD"

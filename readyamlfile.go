@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/url"
 	"os"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -42,14 +43,17 @@ func readYamlFile(filename string) ServiceCatalog {
 		if _, err := url.ParseRequestURI(s.Url); err != nil {
 			exitWithError(fmt.Errorf("URL of Service %s is invalid: %v", s.Name, err))
 		}
-		// if s.Test == "" {
-		// 	sc.Service[i].Test = serviceDefaults.Test
-		// }
-		// sc.Service[i].Test = strings.ToUpper(sc.Service[i].Test)
-		// // check if String is in allowedMethods
-		// if !strings.Contains(allowedTests, s.Test) {
-		// 	exitWithError(fmt.Errorf("test \"%s\" of Service %s is not allowed. Allowed tests are: %v", s.Test, s.Name, allowedTests))
-		// }
+		if s.Test == "" {
+			sc.Service[i].Test = serviceDefaults.Test
+		}
+		sc.Service[i].Test = strings.ToUpper(sc.Service[i].Test)
+		// check if String is in allowedMethods
+		if !strings.Contains(allowedTests, s.Test) {
+			exitWithError(fmt.Errorf("test \"%s\" of Service %s is not allowed. Allowed tests are: %v", s.Test, s.Name, allowedTests))
+		}
+		if s.Test=="HEAD" && s.Text!="" {
+			exitWithError(fmt.Errorf("text \"%s\" of Service %s (HEAD) is not allowed. Text is only allowed for GET test", s.Text, s.Name))
+		}
 		if s.Status == 0 {
 			sc.Service[i].Status = serviceDefaults.Status
 		}
