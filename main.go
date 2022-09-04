@@ -40,7 +40,7 @@ func main() {
 			unhealthyServiceCount++
 			fmt.Printf("- %-30s   %v\n", o.service.Name, o.err)
 		} else {
-			fmt.Printf("+ %-30s   %-10s %-30v %10v   %3v retries\n", o.service.Name, o.response.Proto, o.response.Status, o.requestDuration.Round(time.Millisecond), o.retries)
+			fmt.Printf("+ %-30s   %-10s %-30v %10v   %3v retries   %s\n", o.service.Name, o.response.Proto, o.response.Status, o.requestDuration.Round(time.Millisecond), o.retries, o.response.Header.Get("Server"))
 		}
 	}
 	fmt.Println("---")
