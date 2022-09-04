@@ -23,7 +23,7 @@ service:
     test: HEAD
     status: 301
   - name: minimal example
-    url: https://stiftung-musica-sacra.de/
+    url: https://example.com/
 ```
 
 `delay` is the delay between each check in milliseconds.
