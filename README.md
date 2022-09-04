@@ -77,3 +77,28 @@ $ httpcheck someservicewithtimeout.yaml
 ---
 Unhealthy services: 1
 ```
+
+Output:
+
++ means service is ok
+
+Name of the service
+
+Test method used
+
+HTTP version and status code
+
+Response time in milliseconds
+
+Number of retries
+
+"server" header from the response
+
+found text in the response body
+
+
+in case of a service being down:
+
+- means service is not ok
+
+followed by the error message
