@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"net/url"
 	"os"
 
 	"gopkg.in/yaml.v3"
@@ -37,6 +38,9 @@ func readYamlFile(filename string) ServiceCatalog {
 		}
 		if s.Url == "" {
 			exitWithError(fmt.Errorf("URL of Service %s may not be empty", s.Name))
+		}
+		if _, err := url.ParseRequestURI(s.Url); err != nil {
+			exitWithError(fmt.Errorf("URL of Service %s is invalid: %v", s.Name, err))
 		}
 		// if s.Test == "" {
 		// 	sc.Service[i].Test = serviceDefaults.Test
