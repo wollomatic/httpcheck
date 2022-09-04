@@ -80,7 +80,7 @@ Unhealthy services: 1
 
 Output:
 
-+ means service is ok
+`+` means service is ok
 
 Name of the service
 
@@ -99,6 +99,6 @@ found text in the response body
 
 in case of a service being down:
 
-- means service is not ok
+`-` means service is not ok
 
 followed by the error message
