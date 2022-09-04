@@ -48,6 +48,7 @@ func httpcheck(url string, stat int, str string, timeout time.Duration) (*http.R
 	if err != nil {
 		return &http.Response{}, err
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != stat {
 		return resp, fmt.Errorf("status code does not match: got %d, want %d", resp.StatusCode, stat)
