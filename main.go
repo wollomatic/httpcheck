@@ -25,7 +25,7 @@ func main() {
 
 	// start concurrent service checks
 	delay := 0
-	for _, s := range sc.Service {
+	for _, s := range sc.Services {
 		go checkService(ch, s, time.Duration(delay*int(time.Millisecond)))
 		delay += sc.Delay
 	}
@@ -34,7 +34,7 @@ func main() {
 
 	// wait for all service checks to finish
 	// print results to stdout and count errors
-	for i := 0; i < len(sc.Service); i++ {
+	for i := 0; i < len(sc.Services); i++ {
 		o := <-ch
 		if o.err != nil {
 			unhealthyServiceCount++

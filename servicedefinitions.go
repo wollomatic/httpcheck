@@ -17,8 +17,8 @@ type Service struct {
 }
 
 type ServiceCatalog struct {
-	Delay   int       `yaml:"delay"`
-	Service []Service `yaml:"service"`
+	Delay    int       `yaml:"delay"`
+	Services []Service `yaml:"services"`
 }
 
 type serviceResponse struct {

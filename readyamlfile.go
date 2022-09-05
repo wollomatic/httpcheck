@@ -33,7 +33,7 @@ func readYamlFile(filename string) ServiceCatalog {
 	}
 
 	// check input data for needed values and fill missing optional values with defaults
-	for i, s := range sc.Service {
+	for i, s := range sc.Services {
 		if s.Name == "" {
 			exitWithError(fmt.Errorf("Service #%v: name may not be empty", i+1))
 		}
@@ -44,27 +44,27 @@ func readYamlFile(filename string) ServiceCatalog {
 			exitWithError(fmt.Errorf("URL of Service %s is invalid: %v", s.Name, err))
 		}
 		if s.Test == "" {
-			sc.Service[i].Test = serviceDefaults.Test
+			sc.Services[i].Test = serviceDefaults.Test
 		}
-		sc.Service[i].Test = strings.ToUpper(sc.Service[i].Test)
+		sc.Services[i].Test = strings.ToUpper(sc.Services[i].Test)
 		// check if String is in allowedMethods
 		if !strings.Contains(allowedTests, s.Test) {
 			exitWithError(fmt.Errorf("test \"%s\" of Service %s is not allowed. Allowed tests are: %v", s.Test, s.Name, allowedTests))
 		}
-		if s.Test=="HEAD" && s.Text!="" {
+		if s.Test == "HEAD" && s.Text != "" {
 			exitWithError(fmt.Errorf("text \"%s\" of Service %s (HEAD) is not allowed. Text is only allowed for GET test", s.Text, s.Name))
 		}
 		if s.Status == 0 {
-			sc.Service[i].Status = serviceDefaults.Status
+			sc.Services[i].Status = serviceDefaults.Status
 		}
 		if s.Timeout == 0 {
-			sc.Service[i].Timeout = serviceDefaults.Timeout
+			sc.Services[i].Timeout = serviceDefaults.Timeout
 		}
 		if s.Retries == 0 {
-			sc.Service[i].Retries = serviceDefaults.Retries
+			sc.Services[i].Retries = serviceDefaults.Retries
 		}
 		if s.ErrDelay == 0 {
-			sc.Service[i].ErrDelay = serviceDefaults.ErrDelay
+			sc.Services[i].ErrDelay = serviceDefaults.ErrDelay
 		}
 	}
 	return sc
