@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"time"
 )
@@ -18,7 +19,7 @@ func main() {
 	// read yaml file
 	sc := readYamlFile(os.Args[1])
 
-	fmt.Printf("[%s] starting service checks\n", time.Now().Format("2006-01-02 15:04:05"))
+	log.Println("httpcheck starting service checks")
 
 	// create channel for service responses
 	ch := make(chan serviceResponse)
@@ -40,10 +41,11 @@ func main() {
 			unhealthyServiceCount++
 			fmt.Printf("- %-30s   %v\n", o.service.Name, o.err)
 		} else {
-			fmt.Printf("+ %-30s   %-4s   %-10s %-30v %10v   %3v retries   %-10s   %s\n", o.service.Name, o.service.Test, o.response.Proto, o.response.Status, o.requestDuration.Round(time.Millisecond), o.retries, o.response.Header.Get("Server"), o.service.Text)
+			fmt.Printf("+ %-30s   %-4s   %-10s %-25s %10v   %3v retries   %-15s   %s\n", o.service.Name, o.service.Test, o.response.Proto, o.response.Status, o.requestDuration.Round(time.Millisecond), o.retries, o.response.Header.Get("Server"), o.service.Text)
 		}
 	}
 	fmt.Println("---")
+	fmt.Printf("%v services checked. ", len(sc.Services))
 	if unhealthyServiceCount > 0 {
 		fmt.Printf("Unhealthy services: %v\n", unhealthyServiceCount)
 	} else {
