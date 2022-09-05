@@ -34,15 +34,15 @@ func readYamlFile(filename string) ServiceCatalog {
 		if _, err := url.ParseRequestURI(s.Url); err != nil {
 			log.Fatalf("URL of Service %s is invalid: %v\n", s.Name, err)
 		}
-		if s.Test == "" {
-			sc.Services[i].Test = serviceDefaults.Test
+		if s.Method == "" {
+			sc.Services[i].Method = serviceDefaults.Method
 		}
-		sc.Services[i].Test = strings.ToUpper(sc.Services[i].Test)
+		sc.Services[i].Method = strings.ToUpper(sc.Services[i].Method)
 		// check if String is in allowedMethods
-		if !strings.Contains(allowedTests, s.Test) {
-			log.Fatalf("test \"%s\" of Service %s is not allowed. Allowed tests are: %v\n", s.Test, s.Name, allowedTests)
+		if !strings.Contains(allowedTests, s.Method) {
+			log.Fatalf("test \"%s\" of Service %s is not allowed. Allowed tests are: %v\n", s.Method, s.Name, allowedTests)
 		}
-		if s.Test == "HEAD" && s.Text != "" {
+		if s.Method == "HEAD" && s.Text != "" {
 			log.Fatalf("text \"%s\" of Service %s (HEAD) is not allowed. Text is only allowed for GET test\n", s.Text, s.Name)
 		}
 		if s.Status == 0 {
