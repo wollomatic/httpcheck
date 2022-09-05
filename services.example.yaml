@@ -1,0 +1,14 @@
+---
+delay: 50
+services:
+  - name: Github
+    url: https://github.com
+  - name: Stackoverflow
+    url: https://stackoverflow.com/
+    text: Stack Overflow
+    timeout: 500
+    retries: 2
+    err_delay: 100
+  - name: Google
+    url: https://www.google.com/
+    method: HEAD
