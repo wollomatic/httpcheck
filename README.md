@@ -9,10 +9,10 @@ Put the binary file to your preferred location and create a yaml file with the l
 ```yaml
 ---
 delay: 100
-service:
+services:
   - name: Human friendly name
     url: https://example.com/health
-    test: GET
+    method: GET
     status: 200
     text: OK
     timeout: 1000
@@ -32,7 +32,7 @@ service:
 
 `url` is the url to check.
 
-`test` is the http method to use. Default is `GET`.
+`method` is the http method to use. Default is `GET`.
 
 `status` is the expected http status code. Default is `200`.
 
@@ -63,17 +63,17 @@ n - n services are not ok
 ```
 $ httpcheck services.yaml
 [2022-09-04 17:02:08] starting service checks
-+ Example redir                    HEAD   HTTP/2.0   301 Moved Permanently               141ms     0 retries   nginx
-+ Whoami                           GET    HTTP/2.0   200 OK                              186ms     0 retries   nginx        your IP address and some more stuff
-+ Site with basic auth             GET    HTTP/2.0   403 Forbidden                       128ms     0 retries   nginx        permission
-+ srv.example.com                  GET    HTTP/2.0   418 I'm a teapot                     68ms     0 retries
-+ some html site                   GET    HTTP/2.0   200 OK                              160ms     0 retries                <!DOCTYPE html>
++ Example redir                    HEAD   HTTP/2.0   301 Moved Permanently          141ms     0 retries   nginx     
++ Whoami                           GET    HTTP/2.0   200 OK                         186ms     0 retries   nginx             your IP address and some more stuff
++ Site with basic auth             GET    HTTP/2.0   403 Forbidden                  128ms     0 retries   nginx             permission
++ srv.example.com                  GET    HTTP/2.0   418 I'm a teapot                68ms     0 retries     
++ some html site                   GET    HTTP/2.0   200 OK                         160ms     0 retries                     <!DOCTYPE html>
 ---
-No problems detected.
+5 services checked. No problems detected.
 
 $ httpcheck someservicewithtimeout.yaml
 [2022-09-04 17:20:01] starting service checks
-- AlmNet redir                     Head "https://almnet.de/whoami": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+- Example redir                     Head "https://example.de/test": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
 ---
 Unhealthy services: 1
 ```
