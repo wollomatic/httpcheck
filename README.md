@@ -14,7 +14,7 @@ services:
     url: https://example.com/health
     method: GET
     status: 200
-    text: OK
+    searchtext: OK
     timeout: 1000
     retries: 0
     err_delay: 100
@@ -36,7 +36,7 @@ services:
 
 `status` is the expected http status code. Default is `200`.
 
-`text` is the expected text in the response body. If there is none, no checks on the body are done.
+`searchtext` is the expected text in the response body. If there is none, no checks on the body are done.
 
 `timeout` is the timeout for the http request in milliseconds. Default is `1000`.
 
