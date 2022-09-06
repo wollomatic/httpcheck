@@ -42,13 +42,20 @@ func main() {
 			unhealthyServiceCount++
 			fmt.Printf("Problem: %-30s   %v\n", o.service.Name, o.err)
 		} else {
-			fmt.Printf("OK       %-30s   %-4s   %-10s %-25s %10v   %3v retries   %-15s   %s\n", o.service.Name, o.service.Method, o.response.Proto, o.response.Status, o.requestDuration.Round(time.Millisecond), o.retries, o.response.Header.Get("Server"), o.service.Text)
+			fmt.Printf("OK       %-30s   %-4s   %-10s %-25s %10v   %3v retries   %-15s   %s\n", o.service.Name, o.service.Method, o.response.Proto, o.response.Status, o.requestDuration.Round(time.Millisecond), o.retries, o.response.Header.Get("Server"), o.service.SearchText)
 		}
 	}
 	fmt.Println("---")
-	fmt.Printf("%v services checked. ", len(sc.Services))
+	s := "s"
+	if len(sc.Services) == 1 {
+		s = ""
+	}
+	fmt.Printf("%v service%s checked. ", len(sc.Services), s)
 	if unhealthyServiceCount > 0 {
-		fmt.Printf("Unhealthy services: %v\n", unhealthyServiceCount)
+		if unhealthyServiceCount == 1 {
+			s = ""
+		}
+		fmt.Printf("Unhealthy service%s: %v\n", s, unhealthyServiceCount)
 	} else {
 		fmt.Println("No problems detected.")
 	}
