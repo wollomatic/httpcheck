@@ -26,7 +26,7 @@ func checkService(ch chan serviceResponse, s Service, delay time.Duration) {
 		var response *http.Response
 		var err error
 		start := time.Now()
-		response, err = httpcheck(s.Url, s.Method, s.Status, s.Text, time.Duration(s.Timeout)*time.Millisecond)
+		response, err = httpcheck(s.Url, s.Method, s.Status, s.SearchText, time.Duration(s.Timeout)*time.Millisecond)
 		o.requestDuration = time.Since(start)
 		o.response = *response
 		o.err = err

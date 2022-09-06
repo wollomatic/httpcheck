@@ -42,8 +42,8 @@ func readYamlFile(filename string) ServiceCatalog {
 		if !strings.Contains(allowedTests, s.Method) {
 			log.Fatalf("test \"%s\" of Service %s is not allowed. Allowed tests are: %v\n", s.Method, s.Name, allowedTests)
 		}
-		if s.Method == "HEAD" && s.Text != "" {
-			log.Fatalf("text \"%s\" of Service %s (HEAD) is not allowed. Text is only allowed for GET test\n", s.Text, s.Name)
+		if s.Method == "HEAD" && s.SearchText != "" {
+			log.Fatalf("text \"%s\" of Service %s (HEAD) is not allowed. Text is only allowed for GET test\n", s.SearchText, s.Name)
 		}
 		if s.Status == 0 {
 			sc.Services[i].Status = serviceDefaults.Status

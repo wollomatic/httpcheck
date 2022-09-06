@@ -6,14 +6,14 @@ import (
 )
 
 type Service struct {
-	Name     string `yaml:"name"`
-	Method   string `yaml:"method"`
-	Url      string `yaml:"url"`
-	Status   int    `yaml:"status"`
-	Text     string `yaml:"text"`
-	Timeout  int    `yaml:"timeout"`
-	Retries  int    `yaml:"retries"`
-	ErrDelay int    `yaml:"err_delay"`
+	Name       string `yaml:"name"`
+	Method     string `yaml:"method"`
+	Url        string `yaml:"url"`
+	Status     int    `yaml:"status"`
+	SearchText string `yaml:"searchtext"`
+	Timeout    int    `yaml:"timeout"`
+	Retries    int    `yaml:"retries"`
+	ErrDelay   int    `yaml:"err_delay"`
 }
 
 type ServiceCatalog struct {
