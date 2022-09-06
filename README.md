@@ -20,7 +20,7 @@ services:
     err_delay: 100
   - name: Second example
     url: http://example.com
-    test: HEAD
+    method: HEAD
     status: 301
   - name: minimal example
     url: https://example.com/
