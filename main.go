@@ -35,13 +35,14 @@ func main() {
 
 	// wait for all service checks to finish
 	// print results to stdout and count errors
+	fmt.Println("Result   Service name                     Method Protocol   Response                    Duration     # retries   Server            Search text")
 	for i := 0; i < len(sc.Services); i++ {
 		o := <-ch
 		if o.err != nil {
 			unhealthyServiceCount++
-			fmt.Printf("- %-30s   %v\n", o.service.Name, o.err)
+			fmt.Printf("Problem: %-30s   %v\n", o.service.Name, o.err)
 		} else {
-			fmt.Printf("+ %-30s   %-4s   %-10s %-25s %10v   %3v retries   %-15s   %s\n", o.service.Name, o.service.Method, o.response.Proto, o.response.Status, o.requestDuration.Round(time.Millisecond), o.retries, o.response.Header.Get("Server"), o.service.Text)
+			fmt.Printf("OK       %-30s   %-4s   %-10s %-25s %10v   %3v retries   %-15s   %s\n", o.service.Name, o.service.Method, o.response.Proto, o.response.Status, o.requestDuration.Round(time.Millisecond), o.retries, o.response.Header.Get("Server"), o.service.Text)
 		}
 	}
 	fmt.Println("---")
