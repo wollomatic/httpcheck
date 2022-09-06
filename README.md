@@ -63,24 +63,26 @@ n - n services are not ok
 ```
 $ httpcheck services.yaml
 [2022-09-04 17:02:08] starting service checks
-+ Example redir                    HEAD   HTTP/2.0   301 Moved Permanently          141ms     0 retries   nginx     
-+ Whoami                           GET    HTTP/2.0   200 OK                         186ms     0 retries   nginx             your IP address and some more stuff
-+ Site with basic auth             GET    HTTP/2.0   403 Forbidden                  128ms     0 retries   nginx             permission
-+ srv.example.com                  GET    HTTP/2.0   418 I'm a teapot                68ms     0 retries     
-+ some html site                   GET    HTTP/2.0   200 OK                         160ms     0 retries                     <!DOCTYPE html>
+Result   Service name                     Method Protocol   Response                    Duration     # retries   Server            Search text
+OK       Example redir                    HEAD   HTTP/2.0   301 Moved Permanently          141ms     0 retries   nginx     
+OK       Whoami                           GET    HTTP/2.0   200 OK                         186ms     0 retries   nginx             your IP address and some more stuff
+OK       Site with basic auth             GET    HTTP/2.0   403 Forbidden                  128ms     0 retries   nginx             permission
+OK       srv.example.com                  GET    HTTP/2.0   418 I'm a teapot                68ms     0 retries     
+OK       some html site                   GET    HTTP/2.0   200 OK                         160ms     0 retries                     <!DOCTYPE html>
 ---
 5 services checked. No problems detected.
 
 $ httpcheck someservicewithtimeout.yaml
 [2022-09-04 17:20:01] starting service checks
-- Example redir                     Head "https://example.de/test": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+Result   Service name                     Method Protocol   Response                    Duration     # retries   Server            Search text
+Problem  Example redir                     Head "https://example.de/test": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
 ---
-Unhealthy services: 1
+1 service checked. Unhealthy service: 1
 ```
 
 Output:
 
-`+` means service is ok
+`OK` means service is ok
 
 Name of the service
 
@@ -99,6 +101,6 @@ found text in the response body
 
 in case of a service being down:
 
-`-` means service is not ok
+`Problem` means service is not ok
 
 followed by the error message
