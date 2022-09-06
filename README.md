@@ -75,7 +75,7 @@ OK       some html site                   GET    HTTP/2.0   200 OK              
 $ httpcheck someservicewithtimeout.yaml
 [2022-09-04 17:20:01] starting service checks
 Result   Service name                     Method Protocol   Response                    Duration     # retries   Server            Search text
-Problem  Example redir                     Head "https://example.de/test": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+Problem  Example redir                    Head "https://example.de/test": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
 ---
 1 service checked. Unhealthy service: 1
 ```
