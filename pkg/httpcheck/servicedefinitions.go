@@ -1,11 +1,11 @@
-package main
+package httpcheck
 
 import (
 	"net/http"
 	"time"
 )
 
-type Service struct {
+type Definition struct {
 	Name       string `yaml:"name"`
 	Method     string `yaml:"method"`
 	Url        string `yaml:"url"`
@@ -16,20 +16,20 @@ type Service struct {
 	ErrDelay   int    `yaml:"err_delay"`
 }
 
-type ServiceCatalog struct {
-	Delay    int       `yaml:"delay"`
-	Services []Service `yaml:"services"`
+type Catalog struct {
+	Delay    int          `yaml:"delay"`
+	Services []Definition `yaml:"services"`
 }
 
-type serviceResponse struct {
-	service         Service
-	requestDuration time.Duration
-	response        http.Response
-	retries         int
-	err             error
+type Response struct {
+	Service         Definition
+	RequestDuration time.Duration
+	Response        http.Response
+	Retries         int
+	Err             error
 }
 
-var serviceDefaults = Service{
+var serviceDefaults = Definition{
 	Method:   "GET",
 	Status:   200,
 	Timeout:  1000,

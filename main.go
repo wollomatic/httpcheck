@@ -5,9 +5,11 @@ import (
 	"log"
 	"os"
 	"time"
+
+	"github.com/wollomatic/httpcheck/pkg/httpcheck"
 )
 
-const VERSION = "0.3.0"
+const VERSION = "0.3.1"
 
 func main() {
 
@@ -17,19 +19,23 @@ func main() {
 	}
 
 	// read yaml file
-	sc := readYamlFile(os.Args[1])
+	sc, err := httpcheck.ReadYamlFile(os.Args[1])
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	log.Println("httpcheck starting service checks")
 
 	// create channel for service responses
-	ch := make(chan serviceResponse)
+	ch := make(chan httpcheck.Response)
 
 	// start concurrent service checks
-	delay := 0
-	for _, s := range sc.Services {
-		go checkService(ch, s, time.Duration(delay*int(time.Millisecond)))
-		delay += sc.Delay
-	}
+	go func() {
+		for _, s := range sc.Services {
+			go checkService(ch, s)
+			time.Sleep(time.Duration(sc.Delay) * time.Millisecond)
+		}
+	}()
 
 	var unhealthyServiceCount int
 
@@ -38,11 +44,11 @@ func main() {
 	fmt.Println("Result   Service name                     Method Protocol   Response                    Duration     # retries   Server            Search text")
 	for i := 0; i < len(sc.Services); i++ {
 		o := <-ch
-		if o.err != nil {
+		if o.Err != nil {
 			unhealthyServiceCount++
-			fmt.Printf("Problem: %-30s   %v\n", o.service.Name, o.err)
+			fmt.Printf("Problem: %-30s   %v\n", o.Service.Name, o.Err)
 		} else {
-			fmt.Printf("OK       %-30s   %-4s   %-10s %-25s %10v   %3v retries   %-15s   %s\n", o.service.Name, o.service.Method, o.response.Proto, o.response.Status, o.requestDuration.Round(time.Millisecond), o.retries, o.response.Header.Get("Server"), o.service.SearchText)
+			fmt.Printf("OK       %-30s   %-4s   %-10s %-25s %10v   %3v retries   %-15s   %s\n", o.Service.Name, o.Service.Method, o.Response.Proto, o.Response.Status, o.RequestDuration.Round(time.Millisecond), o.Retries, o.Response.Header.Get("Server"), o.Service.SearchText)
 		}
 	}
 	fmt.Println("---")

@@ -1,7 +1,7 @@
-package main
+package httpcheck
 
 import (
-	"log"
+	"fmt"
 	"net/url"
 	"os"
 	"strings"
@@ -9,30 +9,31 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func readYamlFile(filename string) ServiceCatalog {
+// ReadYamlFile reads a yaml file and returns a catalog of services
+func ReadYamlFile(filename string) (Catalog, error) {
 
 	bs, err := os.ReadFile(filename)
 	if err != nil {
-		log.Fatalln(err)
+		return Catalog{}, err
 	}
 
 	// unmarshal yaml file
-	sc := ServiceCatalog{}
+	sc := Catalog{}
 	err = yaml.Unmarshal(bs, &sc)
 	if err != nil {
-		log.Fatalln(err)
+		return Catalog{}, err
 	}
 
 	// check input data for needed values and fill missing optional values with defaults
 	for i, s := range sc.Services {
 		if s.Name == "" {
-			log.Fatalf("Service #%v: name may not be empty\n", i+1)
+			return Catalog{}, fmt.Errorf("Service #%v: name may not be empty\n", i+1)
 		}
 		if s.Url == "" {
-			log.Fatalf("URL of Service %s may not be empty\n", s.Name)
+			return Catalog{}, fmt.Errorf("URL of Service %s may not be empty\n", s.Name)
 		}
 		if _, err := url.ParseRequestURI(s.Url); err != nil {
-			log.Fatalf("URL of Service %s is invalid: %v\n", s.Name, err)
+			return Catalog{}, fmt.Errorf("URL of Service %s is invalid: %v\n", s.Name, err)
 		}
 		if s.Method == "" {
 			sc.Services[i].Method = serviceDefaults.Method
@@ -40,10 +41,10 @@ func readYamlFile(filename string) ServiceCatalog {
 		sc.Services[i].Method = strings.ToUpper(sc.Services[i].Method)
 		// check if String is in allowedMethods
 		if !strings.Contains(allowedTests, s.Method) {
-			log.Fatalf("test \"%s\" of Service %s is not allowed. Allowed tests are: %v\n", s.Method, s.Name, allowedTests)
+			return Catalog{}, fmt.Errorf("test \"%s\" of Service %s is not allowed. Allowed tests are: %v\n", s.Method, s.Name, allowedTests)
 		}
 		if s.Method == "HEAD" && s.SearchText != "" {
-			log.Fatalf("text \"%s\" of Service %s (HEAD) is not allowed. Text is only allowed for GET test\n", s.SearchText, s.Name)
+			return Catalog{}, fmt.Errorf("text \"%s\" of Service %s (HEAD) is not allowed. Text is only allowed for GET test\n", s.SearchText, s.Name)
 		}
 		if s.Status == 0 {
 			sc.Services[i].Status = serviceDefaults.Status
@@ -58,5 +59,5 @@ func readYamlFile(filename string) ServiceCatalog {
 			sc.Services[i].ErrDelay = serviceDefaults.ErrDelay
 		}
 	}
-	return sc
+	return sc, nil
 }
