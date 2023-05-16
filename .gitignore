@@ -12,3 +12,4 @@
 *.out
 
 services.yaml
+httpcheck
