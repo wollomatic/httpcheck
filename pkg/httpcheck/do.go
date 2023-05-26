@@ -9,7 +9,7 @@ import (
 )
 
 // Do checks a service and returns a http.Response object
-func Do(url string, method string, status int, text string, timeout time.Duration) (*http.Response, error) {
+func Do(url string, method string, contenttype string, body string, status int, text string, timeout time.Duration) (*http.Response, error) {
 	client := &http.Client{
 		Timeout: timeout,
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
@@ -24,6 +24,11 @@ func Do(url string, method string, status int, text string, timeout time.Duratio
 		resp, err = client.Get(url)
 	case "HEAD":
 		resp, err = client.Head(url)
+	case "POST":
+		if (contenttype == "") && (body == "") {
+			return &http.Response{}, fmt.Errorf("contenttype and body must be set for POST requests")
+		}
+		resp, err = client.Post(url, contenttype, strings.NewReader(body))
 	default:
 		resp = &http.Response{}
 		err = fmt.Errorf("invalid method: %s", method)

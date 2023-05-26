@@ -6,14 +6,16 @@ import (
 )
 
 type Definition struct {
-	Name       string `yaml:"name"`
-	Method     string `yaml:"method"`
-	Url        string `yaml:"url"`
-	Status     int    `yaml:"status"`
-	SearchText string `yaml:"searchtext"`
-	Timeout    int    `yaml:"timeout"`
-	Retries    int    `yaml:"retries"`
-	ErrDelay   int    `yaml:"err_delay"`
+	Name               string `yaml:"name"`
+	Method             string `yaml:"method"`
+	Url                string `yaml:"url"`
+	RequestContentType string `yaml:"requestcontenttype"`
+	RequestBody        string `yaml:"requestbody"`
+	Status             int    `yaml:"status"`
+	SearchText         string `yaml:"searchtext"`
+	Timeout            int    `yaml:"timeout"`
+	Retries            int    `yaml:"retries"`
+	ErrDelay           int    `yaml:"err_delay"`
 }
 
 type Catalog struct {
@@ -30,11 +32,13 @@ type Response struct {
 }
 
 var serviceDefaults = Definition{
-	Method:   "GET",
-	Status:   200,
-	Timeout:  1000,
-	Retries:  0,
-	ErrDelay: 100,
+	Method:             "GET",
+	Status:             200,
+	RequestContentType: "",
+	RequestBody:        "",
+	Timeout:            1000,
+	Retries:            0,
+	ErrDelay:           100,
 }
 
-const allowedTests = "GET, HEAD"
+const allowedTests = "GET, HEAD, POST"

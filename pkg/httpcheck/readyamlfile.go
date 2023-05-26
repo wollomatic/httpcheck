@@ -44,7 +44,10 @@ func ReadYamlFile(filename string) (Catalog, error) {
 			return Catalog{}, fmt.Errorf("test \"%s\" of Service %s is not allowed. Allowed tests are: %v\n", s.Method, s.Name, allowedTests)
 		}
 		if s.Method == "HEAD" && s.SearchText != "" {
-			return Catalog{}, fmt.Errorf("text \"%s\" of Service %s (HEAD) is not allowed. Text is only allowed for GET test\n", s.SearchText, s.Name)
+			return Catalog{}, fmt.Errorf("text \"%s\" of Service %s (HEAD) is not allowed. Text is only allowed for GET/POST test\n", s.SearchText, s.Name)
+		}
+		if s.RequestBody != "" && s.Method != "POST" {
+			return Catalog{}, fmt.Errorf("requestbody \"%s\" of Service %s is not allowed. Requestbody is only allowed for POST test\n", s.RequestBody, s.Name)
 		}
 		if s.Status == 0 {
 			sc.Services[i].Status = serviceDefaults.Status

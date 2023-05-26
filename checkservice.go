@@ -23,7 +23,7 @@ func checkService(ch chan<- httpcheck.Response, s httpcheck.Definition) {
 		var response *http.Response
 		var err error
 		start := time.Now()
-		response, err = httpcheck.Do(s.Url, s.Method, s.Status, s.SearchText, time.Duration(s.Timeout)*time.Millisecond)
+		response, err = httpcheck.Do(s.Url, s.Method, s.RequestContentType, s.RequestBody, s.Status, s.SearchText, time.Duration(s.Timeout)*time.Millisecond)
 		o.RequestDuration = time.Since(start)
 		o.Response = *response
 		o.Err = err
