@@ -22,6 +22,16 @@ services:
     url: http://example.com
     method: HEAD
     status: 301
+  - name: Example with POST
+    url: https://example.com/query
+    method: POST
+    requestcontenttype: application/json
+    requestbody: '{"key": "value"}'
+    status: 200
+    searchtext: OK
+    timeout: 1000
+    retries: 2
+    err_delay: 100
   - name: minimal example
     url: https://example.com/
 ```
